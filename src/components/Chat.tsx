@@ -5,6 +5,7 @@ import { requestChatResponse } from '../utils/chatRequests';
 import { logger } from '../utils/logger';
 import { storage } from '../utils/storage';
 import { calculateCost } from '../utils/tokenCost';
+import { DetailChatView } from './DetailChatView';
 
 interface ChatProps {
 	model: string;
@@ -33,6 +34,7 @@ export function Chat({ model, newChat = false }: ChatProps) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedMessage, setSelectedMessage] = useState<ChatMessage | null>(null);
 	const [totalCost, setTotalCost] = useState(0);
+	const [isDetailView, setIsDetailView] = useState(false);
 
 	useEffect(() => {
 		if (newChat) {
@@ -106,29 +108,22 @@ ${message.content}
 ---`;
 	};
 
-	if (selectedMessage) {
+	if (isDetailView) {
 		return (
-			<Detail
-				markdown={renderMessageContent(selectedMessage)}
-				navigationTitle={`Message from ${selectedMessage.role === 'user' ? 'You' : 'AI'}`}
-				actions={
-					<ActionPanel>
-						<Action
-							title="Back to Chat"
-							icon={Icon.ArrowLeft}
-							onAction={() => setSelectedMessage(null)}
-							shortcut={{ modifiers: [], key: 'escape' }}
-						/>
-						<Action.CopyToClipboard title="Copy Message" content={selectedMessage.content} shortcut={{ modifiers: ['cmd'], key: 'c' }} />
-					</ActionPanel>
-				}
-				metadata={
-					<Detail.Metadata>
-						<Detail.Metadata.Label title="Time" text={selectedMessage.timestamp.toLocaleTimeString()} />
-						<Detail.Metadata.Label title="Role" text={selectedMessage.role === 'user' ? 'You' : 'AI'} />
-						<Detail.Metadata.Label title="Model" text={model} />
-					</Detail.Metadata>
-				}
+			<DetailChatView
+				model={model}
+				messages={messages}
+				totalCost={totalCost}
+				inputText={inputText}
+				isLoading={isLoading}
+				onInputChange={setInputText}
+				onSendMessage={handleSendMessage}
+				onSwitchView={() => setIsDetailView(false)}
+				onClearChat={async () => {
+					await storage.saveChat(model, [], 0);
+					setMessages([]);
+					setTotalCost(0);
+				}}
 			/>
 		);
 	}
@@ -143,6 +138,12 @@ ${message.content}
 			actions={
 				<ActionPanel>
 					<Action title="Send Message" icon={Icon.Message} shortcut={{ modifiers: [], key: 'return' }} onAction={handleSendMessage} />
+					<Action
+						title="Switch to Detail View"
+						icon={Icon.Sidebar}
+						shortcut={{ modifiers: ['cmd'], key: 'l' }}
+						onAction={() => setIsDetailView(true)}
+					/>
 				</ActionPanel>
 			}
 			throttle
