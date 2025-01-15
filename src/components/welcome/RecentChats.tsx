@@ -97,7 +97,7 @@ export function RecentChats() {
 
 function getModelIcon(model: string): Icon {
 	if (model.includes('claude')) return Icon.Stars;
-	if (model.includes('gpt')) return Icon.Lightbulb;
+	if (model.includes('gpt')) return Icon.LightBulb;
 	return Icon.Terminal;
 }
 

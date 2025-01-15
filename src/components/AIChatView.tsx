@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Detail, showToast, Toast } from '@raycast/api';
+import { Action, ActionPanel, Detail, popToRoot, showToast, Toast } from '@raycast/api';
 import React, { useEffect, useState } from 'react';
 import { ChatMessage } from '../types';
 import { requestChatResponse } from '../utils/chatRequests';
@@ -91,10 +91,12 @@ export function AIChatView({ initialMessage = '' }: AIChatViewProps) {
 		}
 	};
 
-	const modelSelector = `### Available Models (⌘+K to select)\n${availableModels.map((model) => {
-		const isSelected = selectedModels.includes(model);
-		return `- ${isSelected ? '✓' : '◯'} ${model}`;
-	}).join('\n')}\n\n---\n\n`;
+	const modelSelector = `### Available Models (⌘+K to select)\n${availableModels
+		.map((model) => {
+			const isSelected = selectedModels.includes(model);
+			return `- ${isSelected ? '✓' : '◯'} ${model}`;
+		})
+		.join('\n')}\n\n---\n\n`;
 
 	const chatContent = messages
 		.map((msg) => {
@@ -114,9 +116,17 @@ export function AIChatView({ initialMessage = '' }: AIChatViewProps) {
 						<Action
 							title="Send Message"
 							shortcut={{ modifiers: ['cmd'], key: 'return' }}
-							onAction={() => {
-								const message = prompt('Enter your message:');
-								if (message) handleSendMessage(message);
+							onAction={async () => {
+								try {
+									const toast = await showToast({
+										style: Toast.Style.Animated,
+										title: 'Enter your message in the search bar',
+									});
+
+									await popToRoot();
+								} catch (error) {
+									console.error('Error:', error);
+								}
 							}}
 						/>
 					</ActionPanel.Section>

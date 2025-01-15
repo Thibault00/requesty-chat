@@ -76,17 +76,17 @@ ${message.cost ? `Cost: $${message.cost.toFixed(4)}` : ''}
           <Detail.Metadata.Label title="Model" text={model} />
           <Detail.Metadata.Label title="Total Cost" text={`$${totalCost.toFixed(4)}`} />
           <Detail.Metadata.Label title="Messages" text={messages.length.toString()} />
+          <Detail.Metadata.TagList title="Input">
+            <Detail.Metadata.TagList.Item
+              text={inputText || "Type your message..."}
+              onAction={() => {
+                const newText = inputText || "";
+                onInputChange(newText);
+              }}
+            />
+          </Detail.Metadata.TagList>
         </Detail.Metadata>
       }
-    >
-      <Detail.Metadata>
-        <Detail.Metadata.TagList title="Input">
-          <Detail.Metadata.TagList.Item
-            text={inputText || "Type your message..."}
-            onAction={() => onInputChange(inputText)}
-          />
-        </Detail.Metadata.TagList>
-      </Detail.Metadata>
-    </Detail>
+    />
   );
 }
