@@ -38,33 +38,37 @@ export function ModelSelector({ showNewChatOnly = false }: ModelSelectorProps) {
 	};
 
 	const renderModelItems = () => {
-		return models.map((model) => {
-			const pricing = getModelPricing(model);
+		return models
+			.map((model) => {
+				const pricing = getModelPricing(model);
 
-			// Skip rendering if no pricing is available
-			if (!pricing) return null;
+				// Skip rendering if no pricing is available
+				if (!pricing) return null;
 
-			return (
-				<List.Item
-					key={model}
-					icon={getModelIcon(model)}
-					title={getModelDisplayName(model)}
-					accessories={[
-						{
-							text: `$${pricing.input}/M in • $${pricing.output}/M out`,
-						},
-						{ text: showNewChatOnly ? 'Start New Chat' : 'Configure or Chat' },
-					].filter(Boolean) as List.Item.Accessory[]}
-					actions={
-						<ActionPanel>
-							<ActionPanel.Section>
-								<Action.Push title="Start New Chat" icon={Icon.Message} target={<Chat model={model} newChat={true} />} />
-							</ActionPanel.Section>
-						</ActionPanel>
-					}
-				/>
-			);
-		}).filter(Boolean); // Remove null items
+				return (
+					<List.Item
+						key={model}
+						icon={getModelIcon(model)}
+						title={getModelDisplayName(model)}
+						accessories={
+							[
+								{
+									text: `$${pricing.input}/M in • $${pricing.output}/M out`,
+								},
+								{ text: showNewChatOnly ? 'Start New Chat' : 'Configure or Chat' },
+							].filter(Boolean) as List.Item.Accessory[]
+						}
+						actions={
+							<ActionPanel>
+								<ActionPanel.Section>
+									<Action.Push title="Start New Chat" icon={Icon.Message} target={<Chat model={model} newChat={true} />} />
+								</ActionPanel.Section>
+							</ActionPanel>
+						}
+					/>
+				);
+			})
+			.filter(Boolean); // Remove null items
 	};
 
 	return (
