@@ -88,25 +88,6 @@ export function ModelSelector({ showNewChatOnly = false }: ModelSelectorProps) {
 			.filter(Boolean); // Remove null items
 	};
 
-	const handleStartNewChat = async (model: string) => {
-		const isApiKeyValid = await validateAPIKey();
-
-		if (!isApiKeyValid) {
-			await showToast({
-				style: Toast.Style.Failure,
-				title: 'API Key Not Configured',
-				message: 'Please set up your API key in preferences',
-			});
-
-			// Open extension preferences
-			await openExtensionPreferences();
-			return;
-		}
-
-		// Continue with starting new chat...
-		return <Chat model={model} newChat={true} />;
-	};
-
 	return (
 		<List navigationTitle="Select Requesty Model" isLoading={isLoading}>
 			<List.Section title="Available Models">{renderModelItems()}</List.Section>
@@ -122,10 +103,5 @@ function getModelIcon(model: string): Icon {
 }
 
 function getModelDisplayName(model: string): string {
-	const [provider, modelName] = model.split('/');
-	return modelName;
-}
-
-function capitalize(str: string): string {
-	return str.charAt(0).toUpperCase() + str.slice(1);
+	return model.split('/')[1];
 }

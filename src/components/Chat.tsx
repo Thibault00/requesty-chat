@@ -12,27 +12,10 @@ interface ChatProps {
 	newChat?: boolean;
 }
 
-function formatLongMessage(content: string, maxLength = 100): { title: string; subtitle: string | undefined } {
-	const lines = content.split('\n').filter((line) => line.trim());
-
-	if (lines.length === 0) return { title: content, subtitle: undefined };
-
-	const firstLine = lines[0];
-	const title = firstLine.length > maxLength ? firstLine.slice(0, maxLength) + '...' : firstLine;
-
-	if (lines.length === 1) return { title, subtitle: undefined };
-
-	const remainingLines = lines.slice(1).join(' ');
-	const subtitle = remainingLines.length > maxLength ? remainingLines.slice(0, maxLength) + '...' : remainingLines;
-
-	return { title, subtitle };
-}
-
 export function Chat({ model, newChat = false }: ChatProps) {
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
 	const [inputText, setInputText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
-	const [selectedMessage, setSelectedMessage] = useState<ChatMessage | null>(null);
 	const [totalCost, setTotalCost] = useState(0);
 	const [isDetailView, setIsDetailView] = useState(false);
 
@@ -99,14 +82,6 @@ export function Chat({ model, newChat = false }: ChatProps) {
 			setIsLoading(false);
 		}
 	}, [inputText, isLoading, messages, model, totalCost]);
-
-	const renderMessageContent = (message: ChatMessage) => {
-		return `### ${message.role === 'user' ? 'You' : 'AI'} • ${message.timestamp.toLocaleTimeString()}
-
-${message.content}
-
----`;
-	};
 
 	if (isDetailView) {
 		return (

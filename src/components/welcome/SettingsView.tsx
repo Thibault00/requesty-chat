@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, showToast, Toast } from '@raycast/api';
+import { Action, ActionPanel, Form, showToast, Toast } from '@raycast/api';
 import React, { useEffect, useState } from 'react';
 import { getAPIKey, saveAPIKey } from '../../utils/preferences';
 

@@ -15,15 +15,23 @@ interface ChatCompletionResponse {
 	}[];
 }
 
-interface ModelInfo {
+interface ApiModelItem {
 	provider: string;
 	model: string;
-	input_tokens_price_per_million: number; // Changed to number
-	output_tokens_price_per_million: number; // Changed to number
+	input_tokens_price_per_million: number | string;
+	output_tokens_price_per_million: number | string;
 	updated_at: string;
 }
 
-let cachedModels: ModelInfo[] | null = null;
+interface ApiResponse {
+	provider: string;
+	model: string;
+	input_tokens_price_per_million: number | string;
+	output_tokens_price_per_million: number | string;
+	updated_at: string;
+}
+
+let cachedModels: ApiResponse[] | null = null;
 
 /**
  * Validates if the API key is properly set up and working
@@ -66,12 +74,18 @@ export async function validateAPIKey(): Promise<boolean> {
 export async function getAvailableModels(): Promise<string[]> {
 	if (cachedModels) {
 		return cachedModels
-			.filter((m) => m.input_tokens_price_per_million > 0 && m.output_tokens_price_per_million > 0)
-			.map((m) =>
-				m.provider === 'together'
-					? `${m.provider}/${m.model.split('/').pop()!}` // Extract only the model name after the last '/'
-					: `${m.provider}/${m.model}`,
-			);
+			.filter((m) => {
+				const inputPrice =
+					typeof m.input_tokens_price_per_million === 'string'
+						? parseFloat(m.input_tokens_price_per_million)
+						: m.input_tokens_price_per_million;
+				const outputPrice =
+					typeof m.output_tokens_price_per_million === 'string'
+						? parseFloat(m.output_tokens_price_per_million)
+						: m.output_tokens_price_per_million;
+				return inputPrice > 0 && outputPrice > 0;
+			})
+			.map((m) => (m.provider === 'together' ? `${m.provider}/${m.model.split('/').pop()!}` : `${m.provider}/${m.model}`));
 	}
 
 	const apiKey = await getAPIKey();
@@ -90,7 +104,7 @@ export async function getAvailableModels(): Promise<string[]> {
 		}
 
 		const text = await response.text();
-		let data: any;
+		let data: ApiResponse[];
 
 		try {
 			data = JSON.parse(text);
@@ -119,7 +133,7 @@ export async function getAvailableModels(): Promise<string[]> {
 
 		// Validate each model object
 		const isValid = data.every(
-			(item: any) =>
+			(item: ApiModelItem) =>
 				typeof item.provider === 'string' &&
 				typeof item.model === 'string' &&
 				(typeof item.input_tokens_price_per_million === 'number' || typeof item.input_tokens_price_per_million === 'string') &&
@@ -133,7 +147,7 @@ export async function getAvailableModels(): Promise<string[]> {
 		}
 
 		// Normalize data: ensure pricing fields are numbers
-		const normalizedModels: ModelInfo[] = data.map((item: any) => ({
+		const normalizedModels: ApiResponse[] = data.map((item: ApiModelItem) => ({
 			provider: item.provider,
 			model: item.model,
 			input_tokens_price_per_million:
@@ -180,9 +194,7 @@ export async function getAvailableModels(): Promise<string[]> {
 
 		cachedModels = sortedModels;
 		const modelList = sortedModels.map((m) =>
-			m.provider === 'together'
-				? `${m.provider}/${m.model.split('/').pop()!}` // Extract only the model name after the last '/'
-				: `${m.provider}/${m.model}`,
+			m.provider === 'together' ? `${m.provider}/${m.model.split('/').pop()!}` : `${m.provider}/${m.model}`,
 		);
 
 		logger.log('Final model list (first 5):', modelList.slice(0, 5));
@@ -204,7 +216,6 @@ export function getModelPricing(model: string): { input: number; output: number 
 	const [provider, modelName] = model.split('/');
 	const modelInfo = cachedModels.find((m) => {
 		if (m.provider === provider) {
-			// For "together" provider, ignore everything before the last '/' in the model name
 			const actualModelName = m.model.includes('/') ? m.model.split('/').pop()! : m.model;
 			const searchModelName = modelName.includes('/') ? modelName.split('/').pop()! : modelName;
 			return actualModelName === searchModelName;
@@ -217,8 +228,14 @@ export function getModelPricing(model: string): { input: number; output: number 
 	}
 
 	return {
-		input: modelInfo.input_tokens_price_per_million,
-		output: modelInfo.output_tokens_price_per_million,
+		input:
+			typeof modelInfo.input_tokens_price_per_million === 'string'
+				? parseFloat(modelInfo.input_tokens_price_per_million)
+				: modelInfo.input_tokens_price_per_million,
+		output:
+			typeof modelInfo.output_tokens_price_per_million === 'string'
+				? parseFloat(modelInfo.output_tokens_price_per_million)
+				: modelInfo.output_tokens_price_per_million,
 	};
 }
 

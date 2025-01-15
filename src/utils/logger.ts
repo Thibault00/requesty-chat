@@ -1,12 +1,12 @@
 import { environment } from '@raycast/api';
 
 export const logger = {
-	log: (...args: any[]) => {
+	log: (...args: unknown[]) => {
 		if (environment.isDevelopment) {
 			console.log(new Date().toISOString(), ...args);
 		}
 	},
-	error: (...args: any[]) => {
+	error: (...args: unknown[]) => {
 		if (environment.isDevelopment) {
 			console.error(new Date().toISOString(), ...args);
 		}

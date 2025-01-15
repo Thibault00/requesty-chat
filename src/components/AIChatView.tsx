@@ -118,11 +118,10 @@ export function AIChatView({ initialMessage = '' }: AIChatViewProps) {
 							shortcut={{ modifiers: ['cmd'], key: 'return' }}
 							onAction={async () => {
 								try {
-									const toast = await showToast({
+									await showToast({
 										style: Toast.Style.Animated,
 										title: 'Enter your message in the search bar',
 									});
-
 									await popToRoot();
 								} catch (error) {
 									console.error('Error:', error);
