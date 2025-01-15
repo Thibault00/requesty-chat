@@ -41,20 +41,20 @@ export function ModelSelector({ showNewChatOnly = false }: ModelSelectorProps) {
 		return models.map((model) => {
 			const pricing = getModelPricing(model);
 
+			// Skip rendering if no pricing is available
+			if (!pricing) return null;
+
 			return (
 				<List.Item
 					key={model}
 					icon={getModelIcon(model)}
 					title={getModelDisplayName(model)}
-					subtitle={model}
-					accessories={
-						[
-							pricing && {
-								text: `$${pricing.input}/M in • $${pricing.output}/M out`,
-							},
-							{ text: showNewChatOnly ? 'Start New Chat' : 'Configure or Chat' },
-						].filter(Boolean) as List.Item.Accessory[]
-					}
+					accessories={[
+						{
+							text: `$${pricing.input}/M in • $${pricing.output}/M out`,
+						},
+						{ text: showNewChatOnly ? 'Start New Chat' : 'Configure or Chat' },
+					].filter(Boolean) as List.Item.Accessory[]}
 					actions={
 						<ActionPanel>
 							<ActionPanel.Section>
@@ -64,7 +64,7 @@ export function ModelSelector({ showNewChatOnly = false }: ModelSelectorProps) {
 					}
 				/>
 			);
-		});
+		}).filter(Boolean); // Remove null items
 	};
 
 	return (
@@ -82,7 +82,8 @@ function getModelIcon(model: string): Icon {
 }
 
 function getModelDisplayName(model: string): string {
-	return model.split('/')[1].split('-').map(capitalize).join(' ');
+	const [provider, modelName] = model.split('/');
+	return modelName;
 }
 
 function capitalize(str: string): string {
