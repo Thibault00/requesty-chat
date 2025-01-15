@@ -18,11 +18,11 @@ interface RecentChat {
 function ensureDates(chat: StoredChat): StoredChat {
 	return {
 		...chat,
-		messages: chat.messages.map(msg => ({
+		messages: chat.messages.map((msg) => ({
 			...msg,
-			timestamp: new Date(msg.timestamp)
+			timestamp: new Date(msg.timestamp),
 		})),
-		lastUpdated: new Date(chat.lastUpdated).toISOString()
+		lastUpdated: new Date(chat.lastUpdated).toISOString(),
 	};
 }
 

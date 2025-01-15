@@ -6,10 +6,7 @@ import { ModelSelector } from './welcome/ModelSelector';
 
 export function WelcomeScreen() {
 	return (
-		<List
-			navigationTitle="Requesty Chat"
-			searchBarPlaceholder="Search chats or select an action..."
-		>
+		<List navigationTitle="Requesty Chat" searchBarPlaceholder="Search chats or select an action...">
 			<List.Section title="Quick Actions">
 				<QuickActions />
 			</List.Section>

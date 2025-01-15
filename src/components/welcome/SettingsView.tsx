@@ -19,12 +19,12 @@ export function SettingsView() {
 			await saveAPIKey(values.apiKey);
 			await showToast({
 				style: Toast.Style.Success,
-				title: "Settings saved",
+				title: 'Settings saved',
 			});
 		} catch (error) {
 			await showToast({
 				style: Toast.Style.Failure,
-				title: "Failed to save settings",
+				title: 'Failed to save settings',
 				message: String(error),
 			});
 		}
@@ -34,23 +34,12 @@ export function SettingsView() {
 		<Form
 			actions={
 				<ActionPanel>
-					<Action.SubmitForm
-						title="Save Settings"
-						onSubmit={handleSubmit}
-					/>
+					<Action.SubmitForm title="Save Settings" onSubmit={handleSubmit} />
 				</ActionPanel>
 			}
 		>
-			<Form.PasswordField
-				id="apiKey"
-				title="Requesty API Key"
-				placeholder="Enter your API key"
-				value={apiKey}
-				onChange={setApiKey}
-			/>
-			<Form.Description
-				text="Get your API key from requesty.ai"
-			/>
+			<Form.PasswordField id="apiKey" title="Requesty API Key" placeholder="Enter your API key" value={apiKey} onChange={setApiKey} />
+			<Form.Description text="Get your API key from requesty.ai" />
 		</Form>
 	);
 }

@@ -3,7 +3,7 @@
 	"title": "Requesty Chat",
 	"description": "Chat with AI models through Requesty.ai",
 	"icon": "icon.png",
-	"author": "Thibault Jaigu",
+	"author": "thibaultjaigu",
 	"categories": [
 		"AI"
 	],
@@ -12,7 +12,7 @@
 		{
 			"name": "index",
 			"title": "Requesty Chat",
-			"description": "Chat with 50+ AI models",
+			"description": "Chat with AI models through Requesty.ai",
 			"mode": "view"
 		}
 	],

@@ -17,7 +17,7 @@ export async function requestChatResponse(message: string, model: string): Promi
 		logger.log('Sending request to Requesty:', {
 			model,
 			messages,
-			endpoint: 'https://router.requesty.ai/v1/chat/completions'
+			endpoint: 'https://router.requesty.ai/v1/chat/completions',
 		});
 
 		const content = await createChatCompletion(model, messages);
@@ -25,7 +25,7 @@ export async function requestChatResponse(message: string, model: string): Promi
 		logger.log('Received response from Requesty:', {
 			model,
 			content,
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
 		});
 
 		return {

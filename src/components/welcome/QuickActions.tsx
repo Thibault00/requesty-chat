@@ -9,7 +9,7 @@ export function QuickActions() {
 			<List.Item
 				icon={Icon.Message}
 				title="New Chat"
-				accessories={[{ text: "⏎", tooltip: "Press Enter to start" }]}
+				accessories={[{ text: '⏎', tooltip: 'Press Enter to start' }]}
 				actions={
 					<ActionPanel>
 						<Action.Push
@@ -24,14 +24,10 @@ export function QuickActions() {
 			<List.Item
 				icon={Icon.Gear}
 				title="Settings"
-				accessories={[{ text: "API Key & Preferences" }]}
+				accessories={[{ text: 'API Key & Preferences' }]}
 				actions={
 					<ActionPanel>
-						<Action.Push
-							title="Open Settings"
-							icon={Icon.Gear}
-							target={<SettingsView />}
-						/>
+						<Action.Push title="Open Settings" icon={Icon.Gear} target={<SettingsView />} />
 					</ActionPanel>
 				}
 			/>
