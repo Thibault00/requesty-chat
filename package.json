@@ -2,17 +2,17 @@
 	"name": "requesty-chat",
 	"title": "Requesty Chat",
 	"description": "Chat with AI models through Requesty.ai",
-	"icon": "command-icon.png",
-	"author": "your-name",
+	"icon": "icon.png",
+	"author": "Thibault Jaigu",
 	"categories": [
-		"Productivity"
+		"AI"
 	],
 	"license": "MIT",
 	"commands": [
 		{
 			"name": "index",
 			"title": "Requesty Chat",
-			"description": "Chat with AI models through Requesty.ai",
+			"description": "Chat with 50+ AI models",
 			"mode": "view"
 		}
 	],
