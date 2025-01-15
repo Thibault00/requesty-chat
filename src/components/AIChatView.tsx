@@ -2,7 +2,7 @@ import { Action, ActionPanel, Detail, showToast, Toast } from '@raycast/api';
 import React, { useEffect, useState } from 'react';
 import { ChatMessage } from '../types';
 import { requestChatResponse } from '../utils/chatRequests';
-import { AVAILABLE_MODELS } from '../utils/requestyClient';
+import { getAvailableModels } from '../utils/requestyClient';
 
 interface AIChatViewProps {
 	initialMessage?: string;
@@ -12,12 +12,23 @@ export function AIChatView({ initialMessage = '' }: AIChatViewProps) {
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedModels, setSelectedModels] = useState<string[]>(['anthropic/claude-3-5-sonnet-latest', 'openai/gpt-4']);
+	const [availableModels, setAvailableModels] = useState<string[]>([]);
 
 	useEffect(() => {
+		loadModels();
 		if (initialMessage) {
 			handleSendMessage(initialMessage);
 		}
 	}, []);
+
+	const loadModels = async () => {
+		try {
+			const models = await getAvailableModels();
+			setAvailableModels(models);
+		} catch (error) {
+			console.error('Failed to load models:', error);
+		}
+	};
 
 	const handleModelToggle = (model: string) => {
 		setSelectedModels((prev) => {
@@ -80,7 +91,7 @@ export function AIChatView({ initialMessage = '' }: AIChatViewProps) {
 		}
 	};
 
-	const modelSelector = `### Available Models (⌘+K to select)\n${AVAILABLE_MODELS.map((model) => {
+	const modelSelector = `### Available Models (⌘+K to select)\n${availableModels.map((model) => {
 		const isSelected = selectedModels.includes(model);
 		return `- ${isSelected ? '✓' : '◯'} ${model}`;
 	}).join('\n')}\n\n---\n\n`;
@@ -110,7 +121,7 @@ export function AIChatView({ initialMessage = '' }: AIChatViewProps) {
 						/>
 					</ActionPanel.Section>
 					<ActionPanel.Section title="Models">
-						{AVAILABLE_MODELS.map((model) => (
+						{availableModels.map((model) => (
 							<Action
 								key={model}
 								title={`${selectedModels.includes(model) ? '✓ ' : ''}${model}`}

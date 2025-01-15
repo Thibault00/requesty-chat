@@ -26,6 +26,40 @@ interface ModelInfo {
 let cachedModels: ModelInfo[] | null = null;
 
 /**
+ * Validates if the API key is properly set up and working
+ * @returns A promise that resolves to true if the API key is valid, false otherwise
+ */
+export async function validateAPIKey(): Promise<boolean> {
+  try {
+    const apiKey = await getAPIKey();
+
+    // If no API key is set, return false
+    if (!apiKey) {
+      logger.log('No API key found');
+      return false;
+    }
+
+    // Try to fetch models as a validation test
+    const endpoint = 'https://api.requesty.ai/router/models';
+    const response = await fetch(endpoint, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    if (!response.ok) {
+      logger.error('API key validation failed:', response.statusText);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    logger.error('API key validation error:', error);
+    return false;
+  }
+}
+
+/**
  * Fetches the available models from the API and caches them.
  * @returns A promise that resolves to a list of model identifiers in the format "provider/model".
  */

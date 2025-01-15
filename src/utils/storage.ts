@@ -15,6 +15,17 @@ interface RecentChat {
 	totalCost: number;
 }
 
+function ensureDates(chat: StoredChat): StoredChat {
+	return {
+		...chat,
+		messages: chat.messages.map(msg => ({
+			...msg,
+			timestamp: new Date(msg.timestamp)
+		})),
+		lastUpdated: new Date(chat.lastUpdated).toISOString()
+	};
+}
+
 export const storage = {
 	async saveChat(model: string, messages: ChatMessage[], totalCost: number) {
 		const key = `requesty_chat_${model}`;
@@ -62,14 +73,20 @@ export const storage = {
 
 		for (const [key, value] of Object.entries(allKeys)) {
 			if (key.startsWith('requesty_chat_')) {
-				const chat: StoredChat = JSON.parse(value as string);
-				if (chat.messages.length > 0) {
-					chats.push({
-						model: chat.model,
-						messageCount: chat.messages.length,
-						timestamp: new Date(chat.lastUpdated),
-						totalCost: chat.totalCost || 0,
-					});
+				try {
+					const chat: StoredChat = ensureDates(JSON.parse(value as string));
+					if (chat.messages.length > 0) {
+						chats.push({
+							model: chat.model,
+							messageCount: chat.messages.length,
+							timestamp: new Date(chat.lastUpdated),
+							totalCost: chat.totalCost || 0,
+						});
+					}
+				} catch (error) {
+					console.error('Error parsing chat:', error);
+					// Skip invalid entries
+					continue;
 				}
 			}
 		}

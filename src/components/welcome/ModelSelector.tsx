@@ -1,7 +1,7 @@
-import { Action, ActionPanel, Icon, List, showToast, Toast } from '@raycast/api';
+import { Action, ActionPanel, Icon, List, openExtensionPreferences, showToast, Toast } from '@raycast/api';
 import React, { useEffect, useState } from 'react';
 import { logger } from '../../utils/logger';
-import { getAvailableModels, getModelPricing } from '../../utils/requestyClient';
+import { getAvailableModels, getModelPricing, validateAPIKey } from '../../utils/requestyClient';
 import { Chat } from '../Chat';
 
 interface ModelSelectorProps {
@@ -61,7 +61,24 @@ export function ModelSelector({ showNewChatOnly = false }: ModelSelectorProps) {
 						actions={
 							<ActionPanel>
 								<ActionPanel.Section>
-									<Action.Push title="Start New Chat" icon={Icon.Message} target={<Chat model={model} newChat={true} />} />
+									<Action.Push
+										title="Start New Chat"
+										icon={Icon.Message}
+										target={<Chat model={model} newChat={true} />}
+										onPush={async () => {
+											const isValid = await validateAPIKey();
+											if (!isValid) {
+												await showToast({
+													style: Toast.Style.Failure,
+													title: 'API Key Not Configured',
+													message: 'Please set up your API key in preferences',
+												});
+												await openExtensionPreferences();
+												return false; // Prevent navigation
+											}
+											return true; // Allow navigation
+										}}
+									/>
 								</ActionPanel.Section>
 							</ActionPanel>
 						}
@@ -69,6 +86,25 @@ export function ModelSelector({ showNewChatOnly = false }: ModelSelectorProps) {
 				);
 			})
 			.filter(Boolean); // Remove null items
+	};
+
+	const handleStartNewChat = async (model: string) => {
+		const isApiKeyValid = await validateAPIKey();
+
+		if (!isApiKeyValid) {
+			await showToast({
+				style: Toast.Style.Failure,
+				title: 'API Key Not Configured',
+				message: 'Please set up your API key in preferences',
+			});
+
+			// Open extension preferences
+			await openExtensionPreferences();
+			return;
+		}
+
+		// Continue with starting new chat...
+		return <Chat model={model} newChat={true} />;
 	};
 
 	return (

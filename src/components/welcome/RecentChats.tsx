@@ -2,6 +2,7 @@ import { List, Icon, Action, ActionPanel } from '@raycast/api';
 import React, { useEffect, useState } from 'react';
 import { storage } from '../../utils/storage';
 import { Chat } from '../Chat';
+import { logger } from '../../utils/logger';
 
 interface RecentChat {
 	model: string;
@@ -13,16 +14,44 @@ interface RecentChat {
 export function RecentChats() {
 	const [recentChats, setRecentChats] = useState<RecentChat[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		loadRecentChats();
 	}, []);
 
 	const loadRecentChats = async () => {
-		const chats = await storage.getAllChats();
-		setRecentChats(chats);
-		setIsLoading(false);
+		try {
+			setIsLoading(true);
+			setError(null);
+			logger.log('Loading recent chats...');
+			const chats = await storage.getAllChats();
+			logger.log('Loaded chats:', chats);
+
+			// Ensure timestamps are properly converted to Date objects
+			const processedChats = chats.map(chat => ({
+				...chat,
+				timestamp: new Date(chat.timestamp)
+			}));
+
+			setRecentChats(processedChats);
+		} catch (err) {
+			logger.error('Error loading recent chats:', err);
+			setError(err instanceof Error ? err.message : 'Failed to load recent chats');
+		} finally {
+			setIsLoading(false);
+		}
 	};
+
+	if (error) {
+		return (
+			<List.Item
+				icon={Icon.ExclamationMark}
+				title="Error loading chats"
+				subtitle={error}
+			/>
+		);
+	}
 
 	if (recentChats.length === 0 && !isLoading) {
 		return (

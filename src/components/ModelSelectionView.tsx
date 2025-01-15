@@ -1,12 +1,30 @@
 import { Action, ActionPanel, List } from '@raycast/api';
-import React from 'react';
-import { AVAILABLE_MODELS } from '../utils/requestyClient';
+import React, { useEffect, useState } from 'react';
+import { getAvailableModels } from '../utils/requestyClient';
 import { Chat } from './Chat';
 
 export function ModelSelectionView() {
+	const [models, setModels] = useState<string[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		loadModels();
+	}, []);
+
+	const loadModels = async () => {
+		try {
+			const availableModels = await getAvailableModels();
+			setModels(availableModels);
+		} catch (error) {
+			console.error('Failed to load models:', error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
-		<List searchBarPlaceholder="Search models...">
-			{AVAILABLE_MODELS.map((model) => (
+		<List searchBarPlaceholder="Search models..." isLoading={isLoading}>
+			{models.map((model) => (
 				<List.Item
 					key={model}
 					title={model}
