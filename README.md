@@ -1,75 +1,65 @@
-# 🤖 Requesty Chat for Raycast
+# Requesty Chat for Raycast
 
-![Requesty Chat Banner](./metadata/requesty-chat-1.png)
+Chat with AI models through Requesty.ai directly from Raycast. Access powerful language models like Claude and GPT-4 with real-time cost tracking and chat history.
 
-A powerful Raycast extension for chatting with AI models through Requesty.ai. Get instant access to Claude and other AI models right from your command palette.
+![Requesty Chat Screenshot](./media/screenshot1.png)
 
-## ✨ Features
+## Features
 
-### 🚀 Instant Access
+- **Multiple AI Models**: Access various AI models including Claude 3 Sonnet, GPT-4, and more
+- **Real-time Cost Tracking**: Monitor your token usage and costs in real-time
+- **Chat History**: Keep track of your conversations with automatic cost tracking
+- **Smart Model Selection**: Easily switch between different AI models
+- **Seamless Integration**: Chat directly from Raycast without switching context
 
-- Launch with `⌘ + Space` and type "Requesty Chat"
-- Start chatting immediately with your preferred AI model
-- Switch models on the fly
+## Prerequisites
 
-### 💬 Smart Conversations
+- A Requesty.ai account
+- An API key from Requesty.ai
 
-- Real-time responses from top AI models
-- Full conversation history
-- Code highlighting and markdown support
-- Detailed message view with ⌘Y
+## Installation
 
-### 💰 Cost Tracking
-
-- Real-time cost monitoring
-- Per-message cost breakdown
-- Total conversation costs
-- Separate input/output cost tracking
-
-### ⚡️ Power Features
-
-- Copy messages with ⌘C
-- Clear conversations with ⌘⇧⌫
-- View message details with ⌘Y
-- Quick model switching
-- Persistent chat history
-
-## 🛠 Installation
-
-1. Install [Raycast](https://raycast.com/)
+1. Install the extension from Raycast Store
 2. Get your API key from [Requesty.ai](https://requesty.ai)
-3. Install this extension from the Raycast Store
-4. Enter your Requesty API key in the extension settings
+3. Open the extension settings in Raycast and enter your API key
 
-## 🎮 Usage
+## Getting Started
 
-1. Open Raycast with `⌘ + Space`
-2. Type "Requesty Chat"
-3. Select your preferred AI model
-4. Start chatting!
+1. Open Raycast and select "New Chat" from Requesty Chat
+2. Choose your preferred AI model
+3. Start chatting!
 
-### Keyboard Shortcuts
+## Commands
 
-| Shortcut | Action                           |
-| -------- | -------------------------------- |
-| Return   | Send message                     |
-| ⌘Y       | View message details (List view) |
-| ⌘L       | Toggle Detail/List view          |
-| ⌘C       | Copy message                     |
-| ⌘⇧⌫      | Clear chat                       |
-| Escape   | Go back                          |
+- **New Chat**: Start a new conversation with an AI model
+- **Continue Chat**: Resume a previous conversation
+- **Settings**: Configure your API key and preferences
 
-## 🔑 API Key Setup
+## Models
 
-1. Visit [Requesty.ai](https://requesty.ai)
-2. Create an account or log in
-3. Generate an API key
-4. Add the key to Requesty Chat settings in Raycast
+The extension automatically fetches available models from Requesty.ai. Common models include:
 
-## 🧩 Supported Models
+- Anthropic Claude 3 Sonnet
+- OpenAI GPT-4
+- Google Gemini
+- And more...
 
-- Claude 3.5 Sonnet (Latest)
-- GPT-4
-- More coming soon!
+## Troubleshooting
 
-## 💻 Development
+If you encounter any issues:
+
+1. Verify your API key is correctly set in the extension preferences
+2. Check your internet connection
+3. Ensure your Requesty.ai account is active and has sufficient credits
+
+## Support
+
+For support, please:
+
+1. Check the [Requesty.ai documentation](https://docs.requesty.ai)
+2. Contact support@requesty.ai
+3. File an issue on GitHub
+
+## Privacy
+
+This extension only sends your messages to Requesty.ai's API. No data is stored outside of your local machine except for the chat content processed by the AI models.
