@@ -1,4 +1,4 @@
-import { List, Icon } from '@raycast/api';
+import { List } from '@raycast/api';
 import React from 'react';
 import { RecentChats } from './welcome/RecentChats';
 import { QuickActions } from './welcome/QuickActions';
